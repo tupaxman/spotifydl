@@ -116,8 +116,8 @@ def main(episode_url):
                 audioResponse = requests.get(url + audioURL.replace("{{segment_timestamp}}", str(i * segment_length)))
                 videoResponse.raise_for_status()
                 audioResponse.raise_for_status()
-                open(f"{title}/test_video_{i * segment_length}.ts", "wb").write(videoResponse.content)
-                open(f"{title}/test_audio_{i * segment_length}.ts", "wb").write(audioResponse.content)
+                open(f"{title}/video_segments_{i * segment_length}.ts", "wb").write(videoResponse.content)
+                open(f"{title}/audio_segments_{i * segment_length}.ts", "wb").write(audioResponse.content)
 
                 i += 1
                 pbar.update(segment_length)
