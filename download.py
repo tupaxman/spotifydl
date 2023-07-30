@@ -15,7 +15,7 @@ def main(episode_url):
     try:
         default_ua = "Chrome/51.0.2704.103 Safari/537.36"
         userTokenUrl = episode_url
-        res = requests.get(url=userTokenUrl, headers={'User-Agent': os.getenv('USER_AGENT', default_ua)})
+        res = requests.get(url=userTokenUrl, headers={"User-Agent": os.getenv("USER_AGENT", default_ua)})
         cookies = ""
         for c in res.headers["Set-Cookie"].split(";"):
             if "sp_t" in c:
@@ -25,7 +25,7 @@ def main(episode_url):
         userTokenHeaders = {
             "Cookie": cookies,
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "User-Agent": os.getenv('USER_AGENT', default_ua),
+            "User-Agent": os.getenv("USER_AGENT", default_ua),
         }
 
         userTokenResponse = requests.get(userTokenUrl, headers=userTokenHeaders)
@@ -34,7 +34,7 @@ def main(episode_url):
         parsed_html = BeautifulSoup(userTokenResponse.text, features="html.parser")
         userTokenJSON = parsed_html.body.find("script", attrs={"id": "session", "data-testid": "session"}).contents[0]
         title = parsed_html.head.find("title").contents[0].split("|")[0].strip()
-        
+
         Path(f"{title}").mkdir(parents=True, exist_ok=True)
         print(title)
         userToken = json.loads(userTokenJSON)["accessToken"]
@@ -73,7 +73,7 @@ def main(episode_url):
         clientTokenResponse.raise_for_status()
 
         clientToken = clientTokenResponse.json()["granted_token"]["token"]
-        supports_drm = F"https://gew4-spclient.spotify.com/manifests/v7/json/sources/{os.getenv('DRM_SOURCE')}/options/supports_drm"
+        supports_drm = f"https://gew4-spclient.spotify.com/manifests/v7/json/sources/{os.getenv('DRM_SOURCE')}/options/supports_drm"
 
         drm_headers = {
             "Accept": "*/*",
@@ -82,7 +82,7 @@ def main(episode_url):
             "Referer": "https://open.spotify.com/",
             "Accept-Language": "en-GB,en;q=0.9",
             "Host": "gew4-spclient.spotify.com",
-            "User-Agent": os.getenv('USER_AGENT', default_ua),
+            "User-Agent": os.getenv("USER_AGENT", default_ua),
             "Accept-Encoding": "application/json",
             "Connection": "keep-alive",
             "client-token": f"{clientToken}",
@@ -118,7 +118,7 @@ def main(episode_url):
                 audioResponse.raise_for_status()
                 open(f"{title}/test_video_{i * segment_length}.ts", "wb").write(videoResponse.content)
                 open(f"{title}/test_audio_{i * segment_length}.ts", "wb").write(audioResponse.content)
-               
+
                 i += 1
                 pbar.update(segment_length)
 
