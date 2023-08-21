@@ -78,7 +78,7 @@ def main(episode_url):
         drm_headers = {
             "Accept": "*/*",
             "Origin": "https://open.spotify.com",
-            "Authorization": f"Bearer {userToken}",
+            "Authorization": f"Bearer {os.getenv('ACCESS_TOKEN')}",
             "Referer": "https://open.spotify.com/",
             "Accept-Language": "en-GB,en;q=0.9",
             "Host": "gew4-spclient.spotify.com",
