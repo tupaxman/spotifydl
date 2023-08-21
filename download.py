@@ -96,9 +96,31 @@ def main(episode_url):
         end_time_millis = drm_data["contents"][0]["end_time_millis"]
         segment_length = drm_data["contents"][0]["segment_length"]
 
+
+        profiles = drm_data["contents"][0]["profiles"]
+        print("Available Profiles with File Type 'ts':")
+        for profile in profiles:
+            if profile['file_type'] == 'ts':
+                print(f"Profile ID: {profile['id']}")
+                if "audio_bitrate" in profile:
+                    print(f"Audio Bitrate: {profile['audio_bitrate']} bps")
+                    print(f"Audio Codec: {profile['audio_codec']}")
+                if "video_bitrate" in profile:
+                    print(f"Video Bitrate: {profile['video_bitrate']} bps")
+                    print(f"Video Codec: {profile['video_codec']}")
+                    print(f"Video Resolution: {profile['video_resolution']}p")
+                print(f"MIME Type: {profile['mime_type']}")
+                print(f"File Type: {profile['file_type']}")
+                print(f"Max Bitrate: {profile['max_bitrate']} bps")
+                print("----------------------------------")
+
+
+        video_profile_id = input("Enter the video profile ID: ")
+        audio_profile_id = input("Enter the audio profile ID: ")
+        
         i = 0
-        videoProfile = {"{{profile_id}}": "0", "{{file_type}}": "ts"}
-        audioProfile = {"{{profile_id}}": "9", "{{file_type}}": "ts"}
+        videoProfile = {"{{profile_id}}": video_profile_id, "{{file_type}}": "ts"}
+        audioProfile = {"{{profile_id}}": audio_profile_id, "{{file_type}}": "ts"}
 
         url = drm_data["base_urls"][0]
         videoURL, audioURL = drm_data["segment_template"], drm_data["segment_template"]
